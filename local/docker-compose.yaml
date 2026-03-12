@@ -63,6 +63,7 @@ services:
     environment:
       MINIO_ROOT_USER: minioadmin
       MINIO_ROOT_PASSWORD: minioadmin
+      MINIO_API_OBJECT_OWNERSHIP: "BucketOwnerPreferred"
     ports:
       - "9000:9000"
       - "9001:9001"
@@ -170,6 +171,17 @@ services:
       - MAIL_PASSWORD=${MAIL_PASSWORD}
     depends_on:
       - localstack
+
+  video-processor-front:
+    image: felixgilioli/video-processor-front
+    container_name: video-processor-front
+    ports:
+      - "4200:80"
+    depends_on:
+      keycloak:
+        condition: service_healthy
+      video-api-gateway:
+        condition: service_started
 
 volumes:
   video_pg_data:
